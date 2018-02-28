@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 # How to run it?
-# $ python submit.py
+# $ python main.py
 # =============================================================================
 
 import numpy as np
@@ -26,8 +26,8 @@ from sklearn.neural_network import MLPClassifier
 
 def func_dnn_segment(X, y, resultFile, rst_h, rst_w):
     # config
-    alphas = np.logspace(-5, 1, 1)
-    nnShape = (10, 20)
+    alphas = np.logspace(-4, 1, 1)
+    nnShape = (50,60)
 
     #-----------------------------------
 
@@ -38,7 +38,7 @@ def func_dnn_segment(X, y, resultFile, rst_h, rst_w):
 
     classifiers = []
     for i in alphas:
-        classifiers.append(MLPClassifier(alpha=i, random_state=1, hidden_layer_sizes=nnShape, max_iter=10000))
+        classifiers.append(MLPClassifier(alpha=i, random_state=1, hidden_layer_sizes=nnShape, max_iter=500000))
 
     i = 1
     #figure = plt.figure(figsize=(17, 9))

@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 # How to run it?
-# $ python submit.py
+# $ python main.py
 # =============================================================================
 
 import cv2
@@ -27,11 +27,20 @@ import sys
 import re
 
 
+
+def func_cleanMask(grayImg, maskImg):
+
+    for row_idx in range(len(maskImg)):
+        for col_idx in range(len(maskImg[row_idx])):
+            if maskImg[row_idx][col_idx] == 255:
+                grayImg[row_idx][col_idx] = 0
+
+    return grayImg
+
+
 ###############################################################################
 # Load segmentRst and get boundary mask.
 ###############################################################################
-
-
 def func_extractBoundary(img):
 
     plotImg = cv2.imread(img)
@@ -74,13 +83,13 @@ def func_extractBoundary(img):
 # https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_ml/py_kmeans/py_kmeans_opencv/py_kmeans_opencv.html
 ################################################################################
 
-def func_grayHist(img):
-    plt.hist(img.ravel(), bins=256, range=[0, 256]);
-    #plt.show()
+def func_grayHist(img ):
+    hist = plt.hist(img.ravel(), bins=256, range=[0, 256]);
+    plt.show()
+    return hist
 
 
-
-def func_colorHist(img):
+def func_colorHist(img, show=False):
     color = ('b', 'g', 'r')
     hist_rgb_list = []
     for i, col in enumerate(color):
@@ -88,8 +97,9 @@ def func_colorHist(img):
         hist_rgb_list.append(hist)
         #plt.plot(hist, color=col)
 
-    #plt.xlim([0, 256])
-    #plt.show()
+    if show==True:
+        plt.xlim([0, 256])
+        plt.show()
 
     return hist_rgb_list
 
@@ -114,7 +124,6 @@ def func_applyKnn(img, K):
 
     #cv2.imshow('knn result', res2)
     return res2
-
 
 
 def contourSizeFiltering(contours):
@@ -172,5 +181,21 @@ def build_trainSample(img, step_size, positive=True):
             else:
                 pass;
     return X,Y
+
+
+
+def func_getSingleColorMask(red_ch, color_value):
+    red_roi = red_ch.copy()
+
+    for row_idx in range(red_ch.shape[0]):
+        for col_idx in range(red_ch.shape[1]):
+            if (red_roi[row_idx][col_idx] == color_value):
+                red_roi[row_idx][col_idx] = 255
+            else:
+                red_roi[row_idx][col_idx] = 0
+
+    return red_roi
+
+
 
 

@@ -13,8 +13,9 @@
 # limitations under the License.
 #
 # How to run it?
-# $ python submit.py
+# $ python main.py
 # =============================================================================
+
 
 import cv2
 import myTools
@@ -80,29 +81,31 @@ def model_get_crop_mask(farmland_roi):
 
     kernel  = cv2.getStructuringElement(cv2.MORPH_RECT,(30, 30))
     kernel2 = cv2.getStructuringElement(cv2.MORPH_RECT,(10, 10))
+    kernel3 = cv2.getStructuringElement(cv2.MORPH_RECT,(3, 3))
 
     # For robust
-    eroded=cv2.erode(crop_roi, kernel);
+    #eroded=cv2.erode(crop_roi, kernel);
 
     # For eliminating holes.
-    eroded=cv2.erode(eroded, kernel2);
+    eroded  = cv2.erode(crop_roi, kernel2);
     dilated = cv2.dilate(eroded, kernel2)
 
-    #cv2.imshow("Crop mask (after erose)", dilated)
+    #cv2.imshow("*Crop mask (after erose)", dilated)
     #cv2.waitKey(0)
 
 
 
     # Reference.
-    '''
-    _, contours, hierarchy = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    bigestContour = myTools.contourSizeFiltering(contours)
-    cv2.drawContours(dilated, bigestContour, -1, 100, 10)
-    '''
+    #_, contours, hierarchy = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    #bigestContour = myTools.contourSizeFiltering(contours)
+    #cv2.drawContours(dilated, bigestContour, -1, 100, 10)
 
     #cv2.imshow("Crop mask (with contour)", dilated)
     #cv2.waitKey(0)
 
+    # debug.
+    #cv2.imshow("farmland_knnResult", farmland_knnResult)
+    #cv2.imshow("farmland_knnResult red channel", farmland_redChannel_knnResult)
     return dilated
 
 

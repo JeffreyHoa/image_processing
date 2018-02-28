@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 # How to run it?
-# $ python submit.py
+# $ python main.py
 # =============================================================================
 
 
@@ -25,6 +25,8 @@ import sys
 import loadData
 
 
+# Input: image file list.
+# Fusion and return gray image.
 def func_loadFarmlandMask(tifPathList):
     panel = cv2.imread(tifPathList[0])
 

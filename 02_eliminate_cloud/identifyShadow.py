@@ -13,12 +13,10 @@
 # limitations under the License.
 #
 # How to run it?
-# $ python submit.py
+# $ python main.py
 # =============================================================================
 
-
 import cv2
-import numpy as np
 import myTools
 
 
@@ -56,7 +54,7 @@ def model_get_shadow_mask(farmland_roi):
         _, _, emptyImage = cv2.split(farmland_knnResult)
         ret, emptyImage = cv2.threshold(emptyImage, 0, 0, cv2.THRESH_BINARY)
 
-        return emptyImage
+        return emptyImage, False
 
 
     ################################################################################
@@ -87,14 +85,15 @@ def model_get_shadow_mask(farmland_roi):
     # Erose land mask for better performance.
     ###############################################################################n
 
-    kernel  = cv2.getStructuringElement(cv2.MORPH_RECT,(10, 10))
+    kernel  = cv2.getStructuringElement(cv2.MORPH_RECT,(30, 30))
     kernel2 = cv2.getStructuringElement(cv2.MORPH_RECT,(10, 10))
+    kernel3  = cv2.getStructuringElement(cv2.MORPH_RECT,(40, 40))
 
     # For robust
-    # eroded=cv2.erode(shadow_roi, kernel);
+    #eroded=cv2.dilate(shadow_roi, kernel2);
 
     # For eliminating holes.
-    eroded=cv2.erode(shadow_roi, kernel2);
+    eroded=cv2.erode(shadow_roi, kernel);
     dilated = cv2.dilate(eroded, kernel)
 
     #cv2.imshow("shadow mask (after erose)", dilated)
@@ -103,13 +102,13 @@ def model_get_shadow_mask(farmland_roi):
 
 
     # Reference.
-    _, contours, hierarchy = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    bigestContour = myTools.contourSizeFiltering(contours)
-    cv2.drawContours(dilated, bigestContour, -1, 100, 10)
+    #_, contours, hierarchy = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    #bigestContour = myTools.contourSizeFiltering(contours)
+    #cv2.drawContours(dilated, bigestContour, -1, 100, 10)
 
     #cv2.imshow("shadow mask (with contour)", dilated)
     #cv2.waitKey(0)
 
-    return dilated
+    return dilated, True
 
 
